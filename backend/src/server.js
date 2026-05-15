@@ -4,12 +4,18 @@ const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
 
+const jobRoutes = require("./routes/jobRoutes");
+
+const authRoutes = require("./routes/authRoutes");
+
+
 dotenv.config();
 
 // Connect Database
 connectDB();
 
 const app = express();
+
 
 // Middleware
 app.use(cors());
@@ -21,6 +27,10 @@ app.get("/", (req, res) => {
     message: "Backend server is running"
   });
 });
+
+app.use("/api/jobs", jobRoutes);
+
+app.use("/api/auth", authRoutes);
 
 // Port
 const PORT = process.env.PORT || 5000;
