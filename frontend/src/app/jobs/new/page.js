@@ -31,7 +31,7 @@ export default function NewJobPage() {
 
     await createJob(formData);
 
-    router.push("/");
+    router.push("/homeowner/dashboard");
   };
 
   return (

@@ -6,6 +6,8 @@ import { getJobs } from "@/services/api";
 
 import JobCard from "@/components/JobCard";
 
+import TradespersonNavbar from "@/components/TradespersonNavbar";
+
 export default function TradespersonDashboard() {
 
   const [jobs, setJobs] = useState([]);
@@ -24,7 +26,8 @@ export default function TradespersonDashboard() {
   };
 
   return (
-
+    <>
+<TradespersonNavbar />
     <div>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -44,5 +47,6 @@ export default function TradespersonDashboard() {
       </div>
 
     </div>
+    </>
   );
 }

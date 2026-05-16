@@ -6,6 +6,8 @@ import { getJobs } from "@/services/api";
 
 import JobCard from "@/components/JobCard";
 
+import HomeownerNavbar from "@/components/HomeownerNavbar";
+
 export default function HomeownerDashboard() {
 
   const [jobs, setJobs] = useState([]);
@@ -34,6 +36,7 @@ export default function HomeownerDashboard() {
   return (
 
     <div>
+          <HomeownerNavbar />
 
       <h1 className="text-3xl font-bold mb-6">
         Homeowner Dashboard
