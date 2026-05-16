@@ -1,5 +1,7 @@
 const express = require("express");
 
+const router = express.Router();
+
 const {
   getAllJobs,
   getJobById,
@@ -8,20 +10,40 @@ const {
   deleteJob
 } = require("../controllers/jobController");
 
-const router = express.Router();
+const {
+  protect,
+  authorizeRoles
+} = require("../middleware/authMiddleware");
 
-// GET all jobs
-// POST new job
-router.route("/")
-  .get(getAllJobs)
-  .post(createJob);
 
-// GET single job
-// PATCH update status
-// DELETE job
-router.route("/:id")
-  .get(getJobById)
-  .patch(updateJobStatus)
-  .delete(deleteJob);
+// PUBLIC ROUTES
+router.get("/", getAllJobs);
+
+router.get("/:id", getJobById);
+
+
+// HOMEOWNER ROUTES
+router.post(
+  "/",
+  protect,
+  authorizeRoles("homeowner"),
+  createJob
+);
+
+router.delete(
+  "/:id",
+  protect,
+  authorizeRoles("homeowner"),
+  deleteJob
+);
+
+
+// TRADESPERSON ROUTES
+router.patch(
+  "/:id",
+  protect,
+  authorizeRoles("tradesperson"),
+  updateJobStatus
+);
 
 module.exports = router;
