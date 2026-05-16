@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 
+import HomeownerNavbar from "@/components/HomeownerNavbar";
+
 import {
   getJobById,
   updateJobStatus,
@@ -46,7 +48,10 @@ export default function JobDetailsPage() {
         e.target.value
       );
 
-      setJob(updated);
+      setJob((prev) => ({
+  ...prev,
+  status: updated.status
+}));
 
     } catch (error) {
 
@@ -61,7 +66,7 @@ export default function JobDetailsPage() {
 
       await deleteJob(params.id);
 
-      router.push("/");
+      router.push("/homeowner/dashboard");
 
     } catch (error) {
 
@@ -80,6 +85,8 @@ export default function JobDetailsPage() {
   }
 
   return (
+    <>
+    <HomeownerNavbar />
 
     <div className="bg-white p-6 rounded-lg shadow max-w-3xl mx-auto">
 
@@ -153,5 +160,6 @@ export default function JobDetailsPage() {
       </button>
 
     </div>
+    </>
   );
 }

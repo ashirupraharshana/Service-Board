@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import HomeownerNavbar from "@/components/HomeownerNavbar";
 
 import { createJob } from "@/services/api";
 
@@ -35,6 +36,8 @@ export default function NewJobPage() {
   };
 
   return (
+    <>
+    <HomeownerNavbar />
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
       <h1 className="text-3xl font-bold mb-6">
         Create New Job
@@ -129,5 +132,6 @@ export default function NewJobPage() {
 
       </form>
     </div>
+    </>
   );
 }

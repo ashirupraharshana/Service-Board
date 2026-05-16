@@ -69,31 +69,43 @@ const createJob = async (req, res) => {
 
 // UPDATE job status only
 const updateJobStatus = async (req, res) => {
+
   try {
+
     const { status } = req.body;
 
-    const allowedStatuses = ["Open", "In Progress", "Closed"];
+    const allowedStatuses = [
+      "Open",
+      "In Progress",
+      "Closed"
+    ];
 
     if (!allowedStatuses.includes(status)) {
+
       return res.status(400).json({
-        message: "Invalid status value"
+        message: "Invalid status"
       });
     }
 
-    const job = await JobRequest.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
+    const job = await JobRequest.findById(
+      req.params.id
     );
 
     if (!job) {
+
       return res.status(404).json({
         message: "Job not found"
       });
     }
 
+    job.status = status;
+
+    await job.save();
+
     res.status(200).json(job);
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message
     });
