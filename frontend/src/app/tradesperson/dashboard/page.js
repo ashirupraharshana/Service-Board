@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { getJobs } from "@/services/api";
-
-import JobCard from "@/components/JobCard";
-
 import TradespersonNavbar from "@/components/TradespersonNavbar";
+
+import TradespersonJobCard from "@/components/TradespersonJobCard";
+
+import { getJobs } from "@/services/api";
 
 export default function TradespersonDashboard() {
 
@@ -26,27 +26,32 @@ export default function TradespersonDashboard() {
   };
 
   return (
-    <>
-<TradespersonNavbar />
-    <div>
 
-      <h1 className="text-3xl font-bold mb-6">
-        Tradesperson Dashboard
-      </h1>
+    <div className="min-h-screen bg-gray-100">
 
-      <div className="grid gap-4">
+      <TradespersonNavbar />
 
-        {jobs.map((job) => (
+      <div className="max-w-6xl mx-auto p-6">
 
-          <JobCard
-            key={job._id}
-            job={job}
-          />
-        ))}
+        <h1 className="text-4xl font-bold mb-6">
+          Tradesperson Dashboard
+        </h1>
+
+        <div className="grid gap-4">
+
+          {jobs.map((job) => (
+
+            <TradespersonJobCard
+  key={job._id}
+  job={job}
+/>
+
+          ))}
+
+        </div>
 
       </div>
 
     </div>
-    </>
   );
 }

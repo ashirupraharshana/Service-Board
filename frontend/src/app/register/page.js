@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 
 import { registerUser } from "@/services/api";
@@ -9,6 +11,8 @@ import { registerUser } from "@/services/api";
 export default function RegisterPage() {
 
   const router = useRouter();
+
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,7 +33,18 @@ export default function RegisterPage() {
 
     e.preventDefault();
 
+    setError("");
+
     const data = await registerUser(formData);
+
+    if (!data.token) {
+
+      setError(
+        data.message || "Registration failed"
+      );
+
+      return;
+    }
 
     localStorage.setItem("token", data.token);
 
@@ -38,71 +53,106 @@ export default function RegisterPage() {
       JSON.stringify(data)
     );
 
-    router.push("/");
+    // ROLE BASED REDIRECT
+    if (data.role === "homeowner") {
+
+      router.push("/homeowner/dashboard");
+
+    } else {
+
+      router.push("/tradesperson/dashboard");
+    }
   };
 
   return (
 
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
 
-      <h1 className="text-3xl font-bold mb-6">
-        Register
-      </h1>
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4"
-      >
+        <h1 className="text-4xl font-bold text-center mb-6">
+          Create Account
+        </h1>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          required
-          className="w-full border p-3 rounded"
-        />
+        {error && (
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-          className="w-full border p-3 rounded"
-        />
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            {error}
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-          className="w-full border p-3 rounded"
-        />
+        )}
 
-        <select
-          name="role"
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
         >
-          <option value="homeowner">
-            Homeowner
-          </option>
 
-          <option value="tradesperson">
-            Tradesperson
-          </option>
-        </select>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            required
+            className="w-full border p-3 rounded-lg"
+          />
 
-        <button
-          type="submit"
-          className="bg-black text-white px-5 py-3 rounded"
-        >
-          Register
-        </button>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            onChange={handleChange}
+            required
+            className="w-full border p-3 rounded-lg"
+          />
 
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+            className="w-full border p-3 rounded-lg"
+          />
+
+          <select
+            name="role"
+            onChange={handleChange}
+            className="w-full border p-3 rounded-lg"
+          >
+
+            <option value="homeowner">
+              Homeowner
+            </option>
+
+            <option value="tradesperson">
+              Tradesperson
+            </option>
+
+          </select>
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800"
+          >
+            Register
+          </button>
+
+        </form>
+
+        <p className="text-center mt-5">
+
+          Already have an account?
+
+          <Link
+            href="/login"
+            className="text-blue-600 ml-2"
+          >
+            Login
+          </Link>
+
+        </p>
+
+      </div>
 
     </div>
   );

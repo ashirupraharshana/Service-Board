@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { getJobs } from "@/services/api";
 
-import JobCard from "@/components/JobCard";
+import HomeownerJobCard from "@/components/HomeownerJobCard";
 
 import HomeownerNavbar from "@/components/HomeownerNavbar";
 
@@ -46,10 +46,10 @@ export default function HomeownerDashboard() {
 
         {jobs.map((job) => (
 
-          <JobCard
-            key={job._id}
-            job={job}
-          />
+          <HomeownerJobCard
+  key={job._id}
+  job={job}
+/>
         ))}
 
       </div>
