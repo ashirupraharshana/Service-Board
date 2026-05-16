@@ -44,6 +44,11 @@ const jobRequestSchema = new mongoose.Schema({
   trim: true
 },
 
+createdBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User"
+},
+
   status: {
     type: String,
     enum: ["Open", "In Progress", "Closed"],

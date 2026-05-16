@@ -36,7 +36,14 @@ export default function LoginPage() {
       JSON.stringify(data)
     );
 
-    router.push("/");
+    if (data.role === "homeowner") {
+
+  router.push("/homeowner/dashboard");
+
+} else {
+
+  router.push("/tradesperson/dashboard");
+}
   };
 
   return (

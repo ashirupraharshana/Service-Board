@@ -54,7 +54,10 @@ const getJobById = async (req, res) => {
 // CREATE new job
 const createJob = async (req, res) => {
   try {
-    const job = await JobRequest.create(req.body);
+    const job = await JobRequest.create({
+  ...req.body,
+  createdBy: req.user._id
+});
 
     res.status(201).json(job);
   } catch (error) {
@@ -97,21 +100,37 @@ const updateJobStatus = async (req, res) => {
   }
 };
 
-// DELETE job
+//delete job
 const deleteJob = async (req, res) => {
+
   try {
-    const job = await JobRequest.findByIdAndDelete(req.params.id);
+
+    const job = await JobRequest.findById(req.params.id);
 
     if (!job) {
+
       return res.status(404).json({
         message: "Job not found"
       });
     }
 
-    res.status(200).json({
-      message: "Job deleted successfully"
+    if (
+      job.createdBy.toString() !== req.user._id.toString()
+    ) {
+
+      return res.status(403).json({
+        message: "Not allowed"
+      });
+    }
+
+    await job.deleteOne();
+
+    res.json({
+      message: "Job deleted"
     });
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message
     });
