@@ -9,6 +9,15 @@ export default function HomeownerNavbar() {
     window.location.href = "/login";
   };
 
+  localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+document.cookie =
+  "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+router.push("/login");
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full bg-blue-600 text-white shadow z-50">

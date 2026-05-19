@@ -12,9 +12,7 @@ export default function JobCard({ job }) {
         <p><strong>Location:</strong> {job.location}</p>
         <p><strong>Status:</strong> {job.status}</p>
       </div>
-      <Link href={`/jobs/${job._id}`} className="bg-black text-white px-4 py-2 rounded">
-        View Details
-      </Link>
+      
     </div>
   );
 }
