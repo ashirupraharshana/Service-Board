@@ -8,7 +8,8 @@ import TradespersonNavbar from "@/components/TradespersonNavbar";
 
 import {
   getJobById,
-  updateJobStatus
+  updateJobStatus,
+  acceptJob
 } from "@/services/api";
 
 export default function TradespersonJobDetailsPage() {
@@ -16,6 +17,8 @@ export default function TradespersonJobDetailsPage() {
   const params = useParams();
 
   const [job, setJob] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
 
@@ -25,25 +28,110 @@ export default function TradespersonJobDetailsPage() {
 
   const fetchJob = async () => {
 
-    const data = await getJobById(
+    try {
+
+      const data = await getJobById(
+        params.id
+      );
+
+      setJob(data);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+
+const handleAcceptJob = async () => {
+
+  try {
+
+    const updated = await acceptJob(
       params.id
     );
 
-    setJob(data);
-  };
-
-  const handleStatusChange = async (e) => {
-
-    const updated = await updateJobStatus(
-      params.id,
-      e.target.value
-    );
+    console.log(updated);
 
     setJob((prev) => ({
-      ...prev,
-      status: updated.status
-    }));
+  ...prev,
+  ...updated
+}));
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Failed to accept job");
+  }
+};
+
+
+  // CLOSE JOB
+  const handleCloseJob = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const updated = await updateJobStatus(
+        params.id,
+        "Closed"
+      );
+
+      setJob((prev) => ({
+        ...prev,
+        status: updated.status
+      }));
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to close job"
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
   };
+
+
+  // CANCEL JOB => BACK TO OPEN
+  const handleCancelJob = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const updated = await updateJobStatus(
+        params.id,
+        "Open"
+      );
+
+      setJob((prev) => ({
+        ...prev,
+        status: updated.status
+      }));
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to cancel job"
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
+  };
+
 
   if (!job) {
 
@@ -70,7 +158,7 @@ export default function TradespersonJobDetailsPage() {
           {job.description}
         </p>
 
-        <div className="space-y-2 mb-6">
+        <div className="space-y-3 mb-6">
 
           <p>
             <strong>Category:</strong> {job.category}
@@ -96,35 +184,94 @@ export default function TradespersonJobDetailsPage() {
             <strong>Status:</strong> {job.status}
           </p>
 
-        </div>
+          {job.assignedTradesperson && (
 
-        <div>
+            <div className="bg-green-100 p-4 rounded">
 
-          <label className="font-semibold mr-3">
-            Change Status:
-          </label>
+              <p className="font-semibold text-green-700">
+                Job Accepted
+              </p>
 
-          <select
-            value={job.status}
-            onChange={handleStatusChange}
-            className="border p-2 rounded"
-          >
+              <p>
+                <strong>Tradesperson:</strong>{" "}
+                {job.assignedTradesperson.name}
+              </p>
 
-            <option value="Open">
-              Open
-            </option>
+              <p>
+                <strong>Email:</strong>{" "}
+                {job.assignedTradesperson.email}
+              </p>
 
-            <option value="In Progress">
-              In Progress
-            </option>
-
-            <option value="Closed">
-              Closed
-            </option>
-
-          </select>
+            </div>
+          )}
 
         </div>
+
+
+       
+
+<div className="mt-6">
+
+  {job.status === "Open" && !job.assignedTradesperson && (
+
+    <div className="flex gap-4">
+
+      <button
+        onClick={handleAcceptJob}
+        className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
+      >
+        Confirm Job
+      </button>
+
+      <button
+        onClick={handleCancelJob}
+        className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
+      >
+        Cancel
+      </button>
+
+    </div>
+  )}
+
+
+  {job.status === "In Progress" && (
+
+    <div className="bg-yellow-100 p-4 rounded">
+
+      <p className="font-semibold text-yellow-700 mb-4">
+        Job In Progress
+      </p>
+
+      <button
+        onClick={handleCloseJob}
+        disabled={loading}
+        className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+      >
+        {loading ? "Updating..." : "Done"}
+      </button>
+
+    </div>
+  )}
+
+
+  {job.status === "Closed" && (
+
+    <div className="bg-green-100 p-4 rounded">
+
+      <p className="font-semibold text-green-700">
+        Job Completed Successfully
+      </p>
+
+    </div>
+  )}
+
+</div>
+<button
+  onClick={() => window.history.back()}
+  className="mt-6 bg-gray-700 text-white px-5 py-2 rounded hover:bg-gray-800"
+>
+  Back to Dashboard
+</button>
 
       </div>
 

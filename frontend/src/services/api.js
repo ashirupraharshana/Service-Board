@@ -126,6 +126,7 @@ export const updateJobStatus = async (
 };
 
 
+
 // DELETE JOB
 export const deleteJob = async (id) => {
 
@@ -141,4 +142,31 @@ export const deleteJob = async (id) => {
   );
 
   return response.json();
+};
+
+export const acceptJob = async (id) => {
+
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `http://localhost:5000/api/jobs/${id}/accept`,
+    {
+      method: "PATCH",
+
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  const data = await response.json();
+
+  console.log(data);
+
+  if (!response.ok) {
+
+    throw new Error(data.message);
+  }
+
+  return data;
 };

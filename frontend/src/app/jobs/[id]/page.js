@@ -39,26 +39,6 @@ export default function JobDetailsPage() {
     }
   };
 
-  const handleStatusChange = async (e) => {
-
-    try {
-
-      const updated = await updateJobStatus(
-        params.id,
-        e.target.value
-      );
-
-      setJob((prev) => ({
-  ...prev,
-  status: updated.status
-}));
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-  };
 
   const handleDelete = async () => {
 
@@ -123,41 +103,20 @@ export default function JobDetailsPage() {
         <p>
           <strong>Status:</strong> {job.status}
         </p>
+        
 
       </div>
 
-      <div className="mb-6">
+  
 
-        <label className="font-semibold mr-3">
-          Change Status:
-        </label>
-
-        <select
-          value={job.status}
-          onChange={handleStatusChange}
-          className="border p-2 rounded"
-        >
-          <option value="Open">
-            Open
-          </option>
-
-          <option value="In Progress">
-            In Progress
-          </option>
-
-          <option value="Closed">
-            Closed
-          </option>
-        </select>
-
-      </div>
-
-      <button
-        onClick={handleDelete}
-        className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
-      >
-        Delete Job
-      </button>
+      {job.status !== "In Progress" && (
+  <button
+    onClick={handleDelete}
+    className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
+  >
+    Delete Job
+  </button>
+)}
 
     </div>
     </>
