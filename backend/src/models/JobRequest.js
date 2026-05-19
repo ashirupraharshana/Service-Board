@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const jobRequestSchema = new mongoose.Schema({
+
   title: {
     type: String,
     required: [true, "Title is required"],
@@ -40,14 +41,25 @@ const jobRequestSchema = new mongoose.Schema({
   },
 
   contactNumber: {
-  type: String,
-  trim: true
-},
+    type: String,
+    trim: true
+  },
 
-createdBy: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User"
-},
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+
+  assignedTradesperson: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+  },
+
+  assignedAt: {
+    type: Date,
+    default: null
+  },
 
   status: {
     type: String,
@@ -59,6 +71,10 @@ createdBy: {
     type: Date,
     default: Date.now
   }
+
 });
 
-module.exports = mongoose.model("JobRequest", jobRequestSchema);
+module.exports = mongoose.model(
+  "JobRequest",
+  jobRequestSchema
+);

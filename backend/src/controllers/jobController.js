@@ -1,8 +1,11 @@
 const JobRequest = require("../models/JobRequest");
 
-// GET all jobs
+
+// GET ALL JOBS
 const getAllJobs = async (req, res) => {
+
   try {
+
     const { category, status, search } = req.query;
 
     let filter = {};
@@ -16,58 +19,132 @@ const getAllJobs = async (req, res) => {
     }
 
     if (search) {
-  filter.title = {
-    $regex: search,
-    $options: "i"
-  };
-}
 
-    const jobs = await JobRequest.find(filter).sort({ createdAt: -1 });
+      filter.title = {
+        $regex: search,
+        $options: "i"
+      };
+    }
+
+    const jobs = await JobRequest.find(filter)
+      .populate(
+        "assignedTradesperson",
+        "name email"
+      )
+      .sort({ createdAt: -1 });
 
     res.status(200).json(jobs);
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message
     });
   }
 };
 
-// GET single job
+
+// GET SINGLE JOB
 const getJobById = async (req, res) => {
+
   try {
-    const job = await JobRequest.findById(req.params.id);
+
+    const job = await JobRequest.findById(
+      req.params.id
+    )
+      .populate(
+        "assignedTradesperson",
+        "name email role"
+      )
+      .populate(
+        "createdBy",
+        "name email"
+      );
 
     if (!job) {
+
       return res.status(404).json({
         message: "Job not found"
       });
     }
 
     res.status(200).json(job);
+
   } catch (error) {
+
     res.status(500).json({
       message: error.message
     });
   }
 };
 
-// CREATE new job
+
+// CREATE JOB
 const createJob = async (req, res) => {
+
   try {
+
     const job = await JobRequest.create({
-  ...req.body,
-  createdBy: req.user._id
-});
+
+      ...req.body,
+
+      createdBy: req.user._id
+    });
 
     res.status(201).json(job);
+
   } catch (error) {
+
     res.status(400).json({
       message: error.message
     });
   }
 };
 
-// UPDATE job status only
+
+// ACCEPT JOB
+const acceptJob = async (req, res) => {
+
+  try {
+
+    const job = await JobRequest.findById(
+      req.params.id
+    );
+
+    if (!job) {
+
+      return res.status(404).json({
+        message: "Job not found"
+      });
+    }
+
+    if (job.assignedTradesperson) {
+
+      return res.status(400).json({
+        message: "Job already accepted"
+      });
+    }
+
+    job.assignedTradesperson = req.user._id;
+
+    job.assignedAt = new Date();
+
+    job.status = "In Progress";
+
+    await job.save();
+
+    res.status(200).json(job);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+
+// UPDATE STATUS
 const updateJobStatus = async (req, res) => {
 
   try {
@@ -98,6 +175,19 @@ const updateJobStatus = async (req, res) => {
       });
     }
 
+    // ONLY ASSIGNED TRADESPERSON
+    if (
+      !job.assignedTradesperson ||
+      job.assignedTradesperson.toString() !==
+      req.user._id.toString()
+    ) {
+
+      return res.status(403).json({
+        message:
+          "Only assigned tradesperson can update status"
+      });
+    }
+
     job.status = status;
 
     await job.save();
@@ -112,12 +202,15 @@ const updateJobStatus = async (req, res) => {
   }
 };
 
-//delete job
+
+// DELETE JOB
 const deleteJob = async (req, res) => {
 
   try {
 
-    const job = await JobRequest.findById(req.params.id);
+    const job = await JobRequest.findById(
+      req.params.id
+    );
 
     if (!job) {
 
@@ -127,7 +220,8 @@ const deleteJob = async (req, res) => {
     }
 
     if (
-      job.createdBy.toString() !== req.user._id.toString()
+      job.createdBy.toString() !==
+      req.user._id.toString()
     ) {
 
       return res.status(403).json({
@@ -149,10 +243,18 @@ const deleteJob = async (req, res) => {
   }
 };
 
+
 module.exports = {
+
   getAllJobs,
+
   getJobById,
+
   createJob,
+
+  acceptJob,
+
   updateJobStatus,
+
   deleteJob
 };
