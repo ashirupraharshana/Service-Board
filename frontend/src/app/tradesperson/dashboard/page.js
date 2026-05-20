@@ -14,7 +14,11 @@ export default function TradespersonDashboard() {
 
   const [filteredJobs, setFilteredJobs] = useState([]);
 
-  const [filter, setFilter] = useState("Open");
+  const [statusFilter, setStatusFilter] = useState("Open");
+
+  const [categoryFilter, setCategoryFilter] = useState("");
+
+  const [search, setSearch] = useState("");
 
 
   useEffect(() => {
@@ -26,9 +30,9 @@ export default function TradespersonDashboard() {
 
   useEffect(() => {
 
-    handleFilter(filter);
+    filterJobs();
 
-  }, [jobs, filter]);
+  }, [jobs, statusFilter, categoryFilter]);
 
 
   const fetchJobs = async () => {
@@ -46,22 +50,64 @@ export default function TradespersonDashboard() {
   };
 
 
-  const handleFilter = (status) => {
+  const filterJobs = () => {
 
-    setFilter(status);
+    let filtered = [...jobs];
 
-    if (status === "All") {
 
-      setFilteredJobs(jobs);
+    // STATUS FILTER
+    if (statusFilter !== "All") {
 
-    } else {
-
-      const filtered = jobs.filter(
-        (job) => job.status === status
+      filtered = filtered.filter(
+        (job) => job.status === statusFilter
       );
-
-      setFilteredJobs(filtered);
     }
+
+
+    // CATEGORY FILTER
+    if (categoryFilter !== "") {
+
+      filtered = filtered.filter(
+        (job) => job.category === categoryFilter
+      );
+    }
+
+    setFilteredJobs(filtered);
+  };
+
+
+  // SEARCH
+  const handleSearch = () => {
+
+    let filtered = [...jobs];
+
+
+    if (statusFilter !== "All") {
+
+      filtered = filtered.filter(
+        (job) => job.status === statusFilter
+      );
+    }
+
+
+    if (categoryFilter !== "") {
+
+      filtered = filtered.filter(
+        (job) => job.category === categoryFilter
+      );
+    }
+
+
+    if (search !== "") {
+
+      filtered = filtered.filter((job) =>
+        job.title.toLowerCase().includes(
+          search.toLowerCase()
+        )
+      );
+    }
+
+    setFilteredJobs(filtered);
   };
 
 
@@ -73,40 +119,96 @@ export default function TradespersonDashboard() {
 
       <div className="max-w-6xl mx-auto p-6 pt-28">
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between mb-6">
 
           <h1 className="text-4xl font-bold">
             Tradesperson Dashboard
           </h1>
 
 
-          {/* FILTER */}
+          <div className="flex flex-col md:flex-row gap-3">
 
-          <select
-            value={filter}
-            onChange={(e) =>
-              handleFilter(e.target.value)
-            }
-            className="border p-3 rounded"
-          >
 
-            <option value="Open">
-              Open Jobs
-            </option>
+            {/* STATUS FILTER */}
+            <select
+              value={statusFilter}
+              onChange={(e) =>
+                setStatusFilter(e.target.value)
+              }
+              className="border p-3 rounded"
+            >
 
-            <option value="In Progress">
-              In Progress
-            </option>
+              <option value="Open">
+                Open Jobs
+              </option>
 
-            <option value="Closed">
-              Closed
-            </option>
+              <option value="In Progress">
+                In Progress
+              </option>
 
-            <option value="All">
-              All Jobs
-            </option>
+              <option value="Closed">
+                Closed
+              </option>
 
-          </select>
+              <option value="All">
+                All Jobs
+              </option>
+
+            </select>
+
+
+            {/* CATEGORY FILTER */}
+            <select
+              value={categoryFilter}
+              onChange={(e) =>
+                setCategoryFilter(e.target.value)
+              }
+              className="border p-3 rounded"
+            >
+
+              <option value="">
+                All Categories
+              </option>
+
+              <option value="Plumbing">
+                Plumbing
+              </option>
+
+              <option value="Electrical">
+                Electrical
+              </option>
+
+              <option value="Painting">
+                Painting
+              </option>
+
+              <option value="Joinery">
+                Joinery
+              </option>
+
+            </select>
+
+
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search job title..."
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+              className="border p-3 rounded"
+            />
+
+
+            <button
+              onClick={handleSearch}
+              className="bg-green-700 text-white px-5 py-3 rounded"
+            >
+              Search
+            </button>
+
+          </div>
 
         </div>
 
