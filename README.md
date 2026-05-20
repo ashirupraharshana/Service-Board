@@ -201,93 +201,85 @@ mini service management system/
 
 ## Screenshots
 
-Add screenshots inside a folder called:
-
-```txt
-screenshots/
-```
-
-Recommended screenshots:
-
 ### 1. Homepage
 
 Shows public job list, search, category filter, login/register buttons.
 
-```markdown
+
 ![Homepage](screenshots/homepage.png)
-```
+
 
 ### 2. Register Page
 
 Shows user registration with role selection.
 
-```markdown
+
 ![Register Page](screenshots/register.png)
-```
+
 
 ### 3. Login Page
 
 Shows login form.
 
-```markdown
+
 ![Login Page](screenshots/login.png)
-```
+
 
 ### 4. Authentication Required Page
 
 Shows protected page access message when user is not logged in.
 
-```markdown
+
 ![Authentication Required](screenshots/auth-required.png)
-```
+
 
 ### 5. Homeowner Dashboard
 
 Shows homeowner's own jobs.
 
-```markdown
+
 ![Homeowner Dashboard](screenshots/homeowner-dashboard.png)
-```
+
 
 ### 6. Create Job Page
 
 Shows job creation form.
 
-```markdown
+
 ![Create Job](screenshots/create-job.png)
-```
+
 
 ### 7. Homeowner Job Details Page
 
 Shows job details, edit/delete options, and assigned tradesperson information.
 
-```markdown
+
 ![Homeowner Job Details](screenshots/homeowner-job-details.png)
-```
+
 
 ### 8. Tradesperson Dashboard
 
 Shows open jobs, status filter, category filter, and search.
 
-```markdown
+
 ![Tradesperson Dashboard](screenshots/tradesperson-dashboard.png)
-```
+
 
 ### 9. Tradesperson Job Details Page
 
 Shows confirm job, done button, and job status.
 
-```markdown
+
 ![Tradesperson Job Details](screenshots/tradesperson-job-details.png)
-```
+
 
 ### 10. Tradesperson My Jobs Page
 
 Shows accepted/completed jobs of the logged-in tradesperson.
 
-```markdown
+
 ![Tradesperson My Jobs](screenshots/tradesperson-my-jobs.png)
-```
+
 
 ---
 
