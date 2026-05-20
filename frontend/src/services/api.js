@@ -81,35 +81,27 @@ export const getJobById = async (id) => {
 };
 
 
+// CREATE JOB
 export const createJob = async (jobData) => {
-
-  const token = localStorage.getItem("token");
-
   const response = await fetch(
-    "http://localhost:5000/api/jobs",
+    `${API_URL}/jobs`,
     {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${getToken()}`
       },
-
       body: JSON.stringify(jobData)
     }
   );
 
+  const data = await response.json();
 
   if (!response.ok) {
-
-    const errorData = await response.json();
-
-    throw new Error(
-      errorData.message || "Failed to create job"
-    );
+    throw new Error(data.message || "Failed to create job");
   }
 
-  return response.json();
+  return data;
 };
 
 
@@ -137,7 +129,6 @@ export const updateJobStatus = async (
 };
 
 
-
 // DELETE JOB
 export const deleteJob = async (id) => {
 
@@ -156,28 +147,59 @@ export const deleteJob = async (id) => {
 };
 
 export const acceptJob = async (id) => {
+  const token = getToken();
 
-  const token = localStorage.getItem("token");
+  const url = `${API_URL}/jobs/${id}/accept`;
 
-  const response = await fetch(
-    `http://localhost:5000/api/jobs/${id}/accept`,
-    {
-      method: "PATCH",
+  console.log("ACCEPT JOB URL:", url);
 
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-  );
+  });
 
-  const data = await response.json();
+  const text = await response.text();
 
-  console.log(data);
+  console.log("STATUS:", response.status);
+  console.log("CONTENT TYPE:", response.headers.get("content-type"));
+  console.log("RAW RESPONSE:", text);
+
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(
+      "Backend returned HTML instead of JSON. Actual response: " + text
+    );
+  }
 
   if (!response.ok) {
-
-    throw new Error(data.message);
+    throw new Error(data.message || "Failed to accept job");
   }
 
   return data;
+};
+export const updateJob = async (
+  id,
+  jobData
+) => {
+
+  const response = await fetch(
+    `${API_URL}/jobs/${id}`,
+    {
+      method: "PUT",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`
+      },
+
+      body: JSON.stringify(jobData)
+    }
+  );
+
+  return response.json();
 };

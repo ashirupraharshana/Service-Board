@@ -3,27 +3,18 @@ const express = require("express");
 const router = express.Router();
 
 const {
-
   getAllJobs,
-
   getJobById,
-
   createJob,
-
   acceptJob,
-
   updateJobStatus,
-
-  deleteJob
-
+  deleteJob,
+  updateJob
 } = require("../controllers/jobController");
 
 const {
-
   protect,
-
   authorizeRoles
-
 } = require("../middleware/authMiddleware");
 
 
@@ -41,6 +32,13 @@ router.post(
   createJob
 );
 
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("homeowner"),
+  updateJob
+);
+
 router.delete(
   "/:id",
   protect,
@@ -49,7 +47,7 @@ router.delete(
 );
 
 
-// TRADESPERSON ACCEPT JOB
+// TRADESPERSON ROUTES
 router.patch(
   "/:id/accept",
   protect,
@@ -57,8 +55,6 @@ router.patch(
   acceptJob
 );
 
-
-// TRADESPERSON UPDATE STATUS
 router.patch(
   "/:id",
   protect,
