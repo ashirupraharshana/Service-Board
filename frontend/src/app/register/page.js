@@ -48,6 +48,8 @@ export default function RegisterPage() {
 
     localStorage.setItem("token", data.token);
 
+    document.cookie = `token=${data.token}; path=/`;
+
     localStorage.setItem(
       "user",
       JSON.stringify(data)

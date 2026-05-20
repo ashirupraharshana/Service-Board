@@ -1,26 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function TradespersonNavbar() {
-  const router = useRouter();
-
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-  }, [router]);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    document.cookie =
-      "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    router.push("/login");
-  };
+    if (!token) {
+      window.location.href = "/login";
+    }
+  }, []);
+
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  document.cookie =
+    "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+  window.location.href = "/";
+};
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm z-50">

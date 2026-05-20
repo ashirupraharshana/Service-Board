@@ -59,19 +59,7 @@ export default function TradespersonJobDetailsPage() {
     }
   };
 
-  const handleCancelJob = async () => {
-    try {
-      setLoading(true);
 
-      const updated = await updateJobStatus(params.id, "Open");
-      setJob(updated);
-    } catch (error) {
-      console.log(error);
-      alert(error.message || "Failed to cancel job");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!job) {
     return (
@@ -177,13 +165,7 @@ export default function TradespersonJobDetailsPage() {
                   {loading ? "Working..." : "Confirm Job"}
                 </button>
 
-                <button
-                  onClick={handleCancelJob}
-                  disabled={loading}
-                  className="bg-red-600 text-white px-5 py-3 rounded-lg hover:bg-red-700 transition disabled:opacity-50"
-                >
-                  {loading ? "Working..." : "Cancel"}
-                </button>
+                
               </>
             )}
 
