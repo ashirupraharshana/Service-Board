@@ -40,25 +40,33 @@ const jobRequestSchema = new mongoose.Schema({
   },
 
   contactNumber: {
-  type: String,
-  trim: true
-},
+    type: String,
+    trim: true
+  },
 
-createdBy: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User"
-},
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+
+  assignedTradesperson: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+  },
+
+  assignedAt: {
+    type: Date,
+    default: null
+  },
 
   status: {
     type: String,
     enum: ["Open", "In Progress", "Closed"],
     default: "Open"
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model("JobRequest", jobRequestSchema);

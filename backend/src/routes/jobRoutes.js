@@ -6,8 +6,10 @@ const {
   getAllJobs,
   getJobById,
   createJob,
+  acceptJob,
   updateJobStatus,
-  deleteJob
+  deleteJob,
+  updateJob
 } = require("../controllers/jobController");
 
 const {
@@ -30,6 +32,13 @@ router.post(
   createJob
 );
 
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("homeowner"),
+  updateJob
+);
+
 router.delete(
   "/:id",
   protect,
@@ -39,6 +48,13 @@ router.delete(
 
 
 // TRADESPERSON ROUTES
+router.patch(
+  "/:id/accept",
+  protect,
+  authorizeRoles("tradesperson"),
+  acceptJob
+);
+
 router.patch(
   "/:id",
   protect,
