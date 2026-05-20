@@ -81,22 +81,33 @@ export const getJobById = async (id) => {
 };
 
 
-// CREATE JOB
 export const createJob = async (jobData) => {
 
+  const token = localStorage.getItem("token");
+
   const response = await fetch(
-    `${API_URL}/jobs`,
+    "http://localhost:5000/api/jobs",
     {
       method: "POST",
 
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`
+        Authorization: `Bearer ${token}`
       },
 
       body: JSON.stringify(jobData)
     }
   );
+
+
+  if (!response.ok) {
+
+    const errorData = await response.json();
+
+    throw new Error(
+      errorData.message || "Failed to create job"
+    );
+  }
 
   return response.json();
 };

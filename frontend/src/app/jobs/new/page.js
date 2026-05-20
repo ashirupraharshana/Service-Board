@@ -49,10 +49,7 @@ export default function NewJobPage() {
 
       console.log(error);
 
-      alert(
-        error.response?.data?.message ||
-        "Failed to create job"
-      );
+      alert(error.message);
 
     } finally {
 
